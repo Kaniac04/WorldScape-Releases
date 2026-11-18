@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Download Worldscape for Windows, macOS and Linux</title>
+<meta name="description" content="Download the latest Worldscape installer for Windows, macOS or Linux. Free, works offline, and updates itself.">
+<meta name="theme-color" content="#e6d2a8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d150d" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><img src="../assets/img/logo-192.png" alt="" width="28" height="28"><span>Worldscape</span></a>
+    <a class="link" href="../features/index.html">Features</a>
+    <a class="link" href="../quickstart/index.html">Quickstart</a>
+    <a class="btn btn-primary btn-nav" href="../download/index.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg><span>Download</span></a>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch between light and dark appearance" title="Appearance">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+    </button>
+  </div>
+</header>
+<main id="content">
+  <section class="hero page-head"><div class="wrap">
+      <p class="eyebrow">Download</p>
+      <h1>Get Worldscape</h1>
+      <p class="lede">Pick the installer for your computer. You only need to download once, because the app updates itself afterwards.</p>
+      <div class="actions"><a id="main" class="btn btn-primary" href="#list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg><span id="main-label">Download</span></a><a class="btn btn-ghost" href="../quickstart/index.html">Read the quickstart</a></div>
+      <p id="meta" class="meta" aria-live="polite">Looking up the latest version…</p>
+  </div></section>
+  <section id="download">
+    <div class="wrap">
+      <div id="list" class="dl-grid">
+        <div class="dl-state" id="dl-loading">Looking up the latest files…</div>
+      </div>
+      <noscript><p class="meta">JavaScript is off, so the file list can’t load. <a href="https://github.com/Kaniac04/WorldScape-Releases/releases/latest">Open the downloads page on GitHub</a>.</p></noscript>
+    </div>
+  </section>
+  <section id="install">
+    <div class="wrap install">
+      <div>
+        <p class="eyebrow">First install</p>
+        <h2>Getting past the first-run warning</h2>
+        <p class="note">Worldscape isn’t code-signed yet, so Windows and macOS may warn you the first time you open it. The steps here get past that. After the first install, the app updates itself.</p>
+      </div>
+      <div class="acc">
+        <details open>
+          <summary>Windows</summary>
+          <div class="body"><p>Run the installer. If a blue “Windows protected your PC” window appears, choose <b>More info</b>, then <b>Run anyway</b>.</p></div>
+        </details>
+        <details>
+          <summary>macOS</summary>
+          <div class="body">
+            <ol>
+              <li>Open the <code>.dmg</code> and drag Worldscape into Applications.</li>
+              <li>Open <b>Terminal</b> (press Cmd+Space and type Terminal), paste this command and press Return. You only do this once. It lets macOS open an app that isn’t notarized yet.
+                <div class="cmd"><code id="xcmd">xattr -cr /Applications/Worldscape.app</code><button type="button" id="copy">Copy</button></div>
+              </li>
+              <li>Open Worldscape from Applications as usual. If macOS still blocks it, go to <b>System Settings → Privacy &amp; Security</b> and choose <b>Open Anyway</b>.</li>
+            </ol>
+          </div>
+        </details>
+        <details>
+          <summary>Linux</summary>
+          <div class="body"><p>For the AppImage, right-click the file, open Properties and allow it to run as a program (or run <code>chmod +x</code> on it), then open it. The <code>.deb</code> and <code>.rpm</code> files install with your package manager.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+  <section id="updates">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Updates</p>
+        <h2>Download once. Updates come to you.</h2>
+        <p>Installed copies of Worldscape look after their own updates, and they never change anything without asking.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>It checks quietly</h3><p>Shortly after the app starts, and again every six hours, it looks for a newer version.</p></li>
+        <li><h3>It downloads in the background</h3><p>When a new version is ready, a small bar appears. Nothing installs on its own.</p></li>
+        <li><h3>You choose the moment</h3><p>Select <b>Restart and update</b>. Worldscape saves your chapters and every open pane first. If anything can’t be saved, the update is cancelled and nothing changes.</p></li>
+      </ol>
+      <p class="fine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6z"/><path d="m9 12 2.2 2.2L15 10"/></svg><span>Updates are signed. The app only accepts packages signed with Worldscape’s own key.</span></p>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../index.html"><img src="../assets/img/logo-192.png" alt="" width="24" height="24"><span>Worldscape</span></a>
+    <nav aria-label="Footer"><a href="../index.html">Home</a><a href="../features/index.html">Features</a><a href="../quickstart/index.html">Quickstart</a><a href="../download/index.html">Download</a></nav>
+    <span id="foot-version"></span>
+    <a id="foot-notes" href="https://github.com/Kaniac04/WorldScape-Releases/releases">Release notes</a>
+    <a href="https://github.com/Kaniac04/WorldScape-Releases">GitHub</a>
+  </div>
+</footer>
+<script src="../assets/site.js"></script>
+</body>
+</html>

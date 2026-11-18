@@ -5,290 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Worldscape: write your book and plan your world</title>
 <meta name="description" content="Worldscape is a desktop app for Windows, macOS and Linux that keeps your manuscript, story notes and mood boards in one project. It works offline and updates itself.">
-<meta name="theme-color" content="#f2f3ef" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1f2b33" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#e6d2a8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d150d" media="(prefers-color-scheme: dark)">
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
-<link rel="preload" href="assets/fonts/fraunces-latin-full-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<style>
-@font-face{font-family:"Fraunces";font-style:normal;font-weight:100 900;font-display:swap;src:url(assets/fonts/fraunces-latin-full-normal.woff2) format("woff2-variations"),url(assets/fonts/fraunces-latin-full-normal.woff2) format("woff2")}
-@font-face{font-family:"Inter";font-style:normal;font-weight:100 900;font-display:swap;src:url(assets/fonts/inter-latin-wght-normal.woff2) format("woff2-variations"),url(assets/fonts/inter-latin-wght-normal.woff2) format("woff2")}
-
-/* Same palette as the app (ui/tokens.css) */
-:root{
-  --canvas:#f2f3ef; --surface:#fcfdfb; --surface2:#eff1ec; --hover:#e5e8e1;
-  --line:#d8dcd4; --line2:#c6ccc2;
-  --ink:#17222b; --muted:#5d6c75; --faint:#8b979e;
-  --accent:#1b5c6d; --accent-h:#154a58; --accent-soft:rgba(27,92,109,.10); --onaccent:#f4fbfc;
-  --amber:#b0801f; --amber-text:#7a5810;
-  --shadow-sm:0 1px 2px rgba(20,32,40,.08),0 1px 1px rgba(20,32,40,.04);
-  --shadow:0 24px 60px -24px rgba(20,32,40,.38),0 2px 8px rgba(20,32,40,.08);
-  --r:10px; --r-sm:7px; --r-lg:16px;
-  --display:"Fraunces",Georgia,"Times New Roman",serif;
-  --ui:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --canvas:#1f2b33; --surface:#283740; --surface2:#2f404a; --hover:#3a4d58;
-    --line:#3d505b; --line2:#4f6471;
-    --ink:#f0f4f1; --muted:#b0bfc6; --faint:#879aa4;
-    --accent:#8fd3e0; --accent-h:#ade0ea; --accent-soft:rgba(143,211,224,.16); --onaccent:#0b2229;
-    --amber:#e3bd62; --amber-text:#e3bd62;
-    --shadow-sm:0 1px 2px rgba(8,16,22,.35);
-    --shadow:0 24px 56px -24px rgba(8,16,22,.6),0 2px 8px rgba(8,16,22,.25);
-  }
-}
-:root[data-theme="dark"]{
-  --canvas:#1f2b33; --surface:#283740; --surface2:#2f404a; --hover:#3a4d58;
-  --line:#3d505b; --line2:#4f6471;
-  --ink:#f0f4f1; --muted:#b0bfc6; --faint:#879aa4;
-  --accent:#8fd3e0; --accent-h:#ade0ea; --accent-soft:rgba(143,211,224,.16); --onaccent:#0b2229;
-  --amber:#e3bd62; --amber-text:#e3bd62;
-  --shadow-sm:0 1px 2px rgba(8,16,22,.35);
-  --shadow:0 24px 56px -24px rgba(8,16,22,.6),0 2px 8px rgba(8,16,22,.25);
-}
-
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:84px}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{margin:0;background:var(--canvas);color:var(--ink);font:16px/1.65 var(--ui);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-img{display:block;max-width:100%;height:auto}
-figure{margin:0}
-a{color:var(--accent)}
-.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 clamp(20px,4vw,40px)}
-:focus-visible{outline:none;box-shadow:0 0 0 2px var(--canvas),0 0 0 4px var(--accent);border-radius:var(--r-sm)}
-.skip{position:absolute;left:-9999px;top:8px;background:var(--accent);color:var(--onaccent);padding:8px 14px;border-radius:var(--r-sm);z-index:100}
-.skip:focus{left:12px}
-
-/* Type */
-h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.015em;margin:0;color:var(--ink)}
-h1{font-size:clamp(40px,6.2vw,68px);line-height:1.04;letter-spacing:-.025em}
-h2{font-size:clamp(28px,3.6vw,40px);line-height:1.12}
-h3{font-size:1.25rem;line-height:1.25}
-.eyebrow{font:600 .72rem/1 var(--ui);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
-.lede{font-size:clamp(1.05rem,1.5vw,1.2rem);color:var(--muted);max-width:36em;margin:20px 0 0}
-p{margin:0}
-
-/* Nav */
-.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--canvas) 86%,transparent);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:8px;height:60px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:650;color:var(--ink);text-decoration:none;margin-right:auto}
-.brand img{width:28px;height:28px;border-radius:7px}
-.nav a.link{color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;padding:8px 10px;border-radius:var(--r-sm)}
-.nav a.link:hover{color:var(--ink);background:var(--hover)}
-.icon-btn{width:36px;height:36px;display:inline-grid;place-items:center;background:transparent;border:1px solid var(--line);border-radius:var(--r-sm);color:var(--ink);cursor:pointer}
-.icon-btn:hover{background:var(--hover)}
-.icon-btn svg{width:17px;height:17px}
-@media (max-width:640px){.nav a.link.hide-s{display:none}}
-
-/* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:0 20px;border-radius:var(--r);font:600 .95rem/1 var(--ui);text-decoration:none;border:1px solid transparent;cursor:pointer;transition:background .15s,border-color .15s}
-.btn svg{width:18px;height:18px;flex:none}
-.btn-primary{background:var(--accent);color:var(--onaccent);box-shadow:var(--shadow-sm)}
-.btn-primary:hover{background:var(--accent-h)}
-.btn-ghost{background:var(--surface);color:var(--ink);border-color:var(--line2)}
-.btn-ghost:hover{background:var(--hover)}
-.btn .sz{font-weight:500;opacity:.75;font-size:.85rem;white-space:nowrap}
-.btn span:first-of-type{white-space:nowrap}
-
-/* Hero */
-.hero{padding:clamp(48px,8vw,96px) 0 0}
-.hero .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.meta{margin-top:16px;color:var(--muted);font-size:.9rem;min-height:1.5em}
-.meta b{color:var(--ink);font-weight:600}
-.shot{margin:clamp(40px,6vw,72px) 0 0}
-.frame{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
-.frame img{width:100%}
-.t-dark{display:none}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .t-light{display:none}:root:not([data-theme="light"]) .t-dark{display:block}}
-:root[data-theme="dark"] .t-light{display:none}
-:root[data-theme="dark"] .t-dark{display:block}
-.facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin:28px 0 0;padding:0;list-style:none;color:var(--muted);font-size:.92rem}
-.facts li{display:flex;align-items:center;gap:8px}
-.facts svg{width:16px;height:16px;color:var(--accent);flex:none}
-
-/* Sections */
-section{padding:clamp(64px,9vw,120px) 0 0}
-.head{max-width:40em;margin-bottom:clamp(28px,4vw,48px)}
-.head p{color:var(--muted);margin-top:14px;font-size:1.05rem}
-
-/* Tools trio */
-.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-sm)}
-.card .ic{width:38px;height:38px;border-radius:var(--r-sm);background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-bottom:16px}
-.card .ic svg{width:19px;height:19px}
-.card h3{margin-bottom:8px}
-.card p{color:var(--muted);font-size:.95rem}
-@media (max-width:860px){.trio{grid-template-columns:1fr}}
-
-/* Feature rows */
-.rows{display:grid;gap:clamp(56px,8vw,104px)}
-.row{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,64px);align-items:center}
-.row.flip{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
-.row.flip .copy{order:2}
-.copy p{color:var(--muted);margin-top:14px}
-.copy ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:10px}
-.copy li{display:flex;gap:10px;font-size:.95rem;color:var(--ink)}
-.copy li::before{content:"";flex:none;width:6px;height:6px;border-radius:2px;background:var(--amber);margin-top:.62em}
-@media (max-width:860px){.row,.row.flip{grid-template-columns:1fr}.row.flip .copy{order:0}}
-
-/* Downloads */
-.dl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
-.os{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:16px}
-.os.yours{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow-sm)}
-.os-head{display:flex;align-items:center;gap:12px}
-.os-head .ic{width:38px;height:38px;border-radius:var(--r-sm);background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
-.os-head .ic svg{width:19px;height:19px}
-.os-head h3{margin-right:auto}
-.badge{font:600 .68rem/1 var(--ui);letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:var(--onaccent);padding:6px 8px;border-radius:999px}
-.os .sub{color:var(--muted);font-size:.9rem;margin-top:-8px}
-.os .btn{width:100%;justify-content:space-between}
-.alt-h{font:600 .72rem/1 var(--ui);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:4px 0 -4px}
-.alt{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-.alt li{display:flex;gap:6px 12px;align-items:baseline;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line);font-size:.9rem}
-.alt a{color:var(--ink);font-weight:500;text-decoration:none;margin-right:auto}
-.alt a:hover{color:var(--accent);text-decoration:underline}
-.alt .tag,.alt .sz{color:var(--muted);font-size:.82rem}
-.os .none{color:var(--muted);font-size:.92rem}
-.dl-state{color:var(--muted);padding:28px;border:1px dashed var(--line2);border-radius:var(--r-lg);text-align:center;grid-column:1/-1}
-@media (max-width:900px){.dl-grid{grid-template-columns:1fr}}
-
-/* Install */
-.install{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,64px);align-items:start}
-.note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:var(--r);padding:16px 18px;color:var(--muted);font-size:.95rem;margin-top:22px}
-.acc{border-top:1px solid var(--line)}
-.acc details{border-bottom:1px solid var(--line)}
-.acc summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:18px 4px;font-weight:600;font-size:1.02rem}
-.acc summary::-webkit-details-marker{display:none}
-.acc summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .15s;margin-right:6px}
-.acc details[open] summary::after{transform:rotate(-135deg)}
-.acc .body{padding:0 4px 20px;color:var(--muted);font-size:.96rem;max-width:42em}
-.acc ol{margin:0;padding-left:1.2em;display:grid;gap:10px}
-.acc b{color:var(--ink);font-weight:600}
-code{font:.88em var(--mono);background:var(--surface2);border:1px solid var(--line);padding:.1em .38em;border-radius:5px;color:var(--ink)}
-.cmd{display:flex;align-items:stretch;gap:8px;margin:12px 0 2px;flex-wrap:wrap}
-.cmd code{flex:1 1 280px;padding:.7em .9em;border-radius:var(--r-sm);overflow-x:auto;white-space:nowrap;display:block}
-.cmd button{font:600 .85rem var(--ui);background:var(--surface);color:var(--ink);border:1px solid var(--line2);border-radius:var(--r-sm);padding:0 16px;min-height:40px;cursor:pointer}
-.cmd button:hover{background:var(--hover)}
-@media (max-width:900px){.install{grid-template-columns:1fr}}
-
-/* Updates */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s;margin:0;padding:0;list-style:none}
-.steps li{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;counter-increment:s;box-shadow:var(--shadow-sm)}
-.steps li::before{content:counter(s);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:600 .85rem var(--ui);margin-bottom:16px}
-.steps h3{margin-bottom:8px;font-size:1.1rem}
-.steps p{color:var(--muted);font-size:.94rem}
-.fine{margin-top:20px;color:var(--muted);font-size:.92rem;display:flex;gap:10px;align-items:flex-start}
-.fine svg{width:17px;height:17px;color:var(--accent);flex:none;margin-top:.2em}
-@media (max-width:860px){.steps{grid-template-columns:1fr}}
-
-/* Quickstart */
-.qs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:start}
-.qs>*{min-width:0}
-.qs-toc{position:sticky;top:84px;max-height:calc(100vh - 104px);overflow:auto}
-.qs-toc .alt-h{margin:0 0 12px}
-.qs-toc ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
-.qs-toc a{display:flex;gap:10px;align-items:baseline;padding:7px 12px;margin-left:-1px;border-left:2px solid transparent;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500}
-.qs-toc a span{font:600 .75rem var(--ui);color:var(--faint);min-width:1.3em}
-.qs-toc a:hover{color:var(--ink);background:var(--hover)}
-.qs-toc a.on{color:var(--accent);border-left-color:var(--accent);background:var(--accent-soft)}
-.qs-toc a.on span{color:var(--accent)}
-.qs-chap{padding:clamp(28px,4vw,44px) 0;border-top:1px solid var(--line)}
-.qs-chap:first-child{border-top:0;padding-top:0}
-.qs-chap>header{display:flex;gap:16px;align-items:center;margin-bottom:22px}
-.qs-n{flex:none;width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font:600 1.15rem var(--display)}
-.qs-t{font-size:clamp(1.5rem,2.4vw,1.9rem);line-height:1.15}
-.qs-chap>header p{color:var(--muted);font-size:.95rem;margin-top:4px}
-.qs-chap>h3{font-size:1.25rem;margin:34px 0 10px}
-.qs-chap>h4{font:600 .98rem var(--ui);margin:22px 0 8px;color:var(--amber-text)}
-.qs-chap>p,.qs-list,.qs-ol{color:var(--muted);max-width:44em}
-.qs-chap>p+p,.qs-chap>p+.qs-list,.qs-chap>p+.qs-ol{margin-top:12px}
-.qs-chap b{color:var(--ink);font-weight:600}
-.qs-list,.qs-ol{margin:12px 0 0;padding:0;display:grid;gap:9px;font-size:.96rem}
-.qs-list{list-style:none}
-.qs-list li{position:relative;padding-left:18px}
-.qs-list li::before{content:"";position:absolute;left:2px;top:.68em;width:6px;height:6px;border-radius:2px;background:var(--amber)}
-.qs-ol{counter-reset:q;list-style:none}
-.qs-ol li{counter-increment:q;position:relative;padding-left:36px}
-.qs-ol li::before{content:counter(q);position:absolute;left:0;top:.12em;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font:600 .78rem var(--ui)}
-.qs-chap .note{max-width:44em}
-.qs-tbl{margin-top:16px;overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow-sm)}
-.qs-tbl table{width:100%;border-collapse:collapse;font-size:.94rem}
-.qs-tbl th{text-align:left;font:600 .72rem var(--ui);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);background:var(--surface2);padding:12px 16px}
-.qs-tbl td{padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);vertical-align:top}
-.qs-tbl td:first-child{color:var(--ink);white-space:nowrap}
-.qs-chap>.qs-tbl+p,.qs-chap>.qs-tree+p{margin-top:16px}
-kbd{font:600 .8em var(--mono);background:var(--surface2);border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;padding:.15em .5em;color:var(--ink)}
-.qs-tree{margin:16px 0 0;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);font:.88rem/1.8 var(--mono);color:var(--ink);overflow-x:auto}
-.qs-tree i{font-style:normal;color:var(--muted)}
-.qs-fig,.car{margin:22px 0 0}
-.qs-fig .frame,.car .frame{box-shadow:var(--shadow-sm)}
-figcaption{margin-top:10px;font-size:.88rem;color:var(--muted);text-align:center}
-figcaption b{color:var(--ink);font-weight:600}
-.car{position:relative;border-radius:var(--r-lg)}
-.car-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;gap:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px}
-.car-track::-webkit-scrollbar{display:none}
-.car-slide{flex:0 0 100%;scroll-snap-align:center;min-width:0}
-.car-bar{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px}
-.car-btn{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:var(--surface);color:var(--ink);border:1px solid var(--line2);cursor:pointer;box-shadow:var(--shadow-sm)}
-.car-btn:hover:not(:disabled){background:var(--hover)}
-.car-btn:disabled{opacity:.35;cursor:default}
-.car-btn svg{width:17px;height:17px}
-.car-dots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
-.car-dots button{width:8px;height:8px;padding:0;border-radius:999px;border:0;background:var(--line2);cursor:pointer;transition:width .2s,background .2s}
-.car-dots button[aria-current="true"]{width:22px;background:var(--accent)}
-.car-count{font:600 .8rem var(--ui);color:var(--muted);min-width:3.2em;text-align:center}
-@media (max-width:900px){
-  .qs{grid-template-columns:1fr}
-  .qs-toc{position:sticky;top:60px;z-index:20;max-height:none;overflow:visible;margin:0 calc(-1*clamp(20px,4vw,40px));padding:8px clamp(20px,4vw,40px);background:color-mix(in srgb,var(--canvas) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-  .qs-toc .alt-h{display:none}
-  .qs-toc ol{display:flex;gap:6px;overflow-x:auto;border:0;scrollbar-width:none}
-  .qs-toc a{border:1px solid var(--line);border-radius:999px;margin:0;white-space:nowrap;padding:6px 12px}
-  .qs-toc a.on{border-color:var(--accent)}
-  .qs-toc a span{display:none}
-  html{scroll-padding-top:128px}
-  .qs-tbl td:first-child{white-space:normal}
-}
-@media (prefers-reduced-motion:reduce){.car-track{scroll-behavior:auto}}
-
-/* Footer */
-footer{margin-top:clamp(72px,10vw,128px);border-top:1px solid var(--line);padding:32px 0 48px;color:var(--muted);font-size:.9rem}
-footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
-footer .brand{font-size:.95rem;margin-right:auto}
-footer a{color:var(--muted)}
-footer a:hover{color:var(--ink)}
-</style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<a class="skip" href="#download">Skip to downloads</a>
-
+<a class="skip" href="#content">Skip to content</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="#top"><img src="assets/img/logo-192.png" alt="" width="28" height="28"><span>Worldscape</span></a>
-    <a class="link hide-s" href="#inside">What’s inside</a>
-    <a class="link hide-s" href="#install">Installing</a>
-    <a class="link hide-s" href="#updates">Updates</a>
-    <a class="link hide-s" href="#quickstart">Quickstart</a>
-    <a class="link" href="#download">Download</a>
+    <a class="brand" href="index.html"><img src="assets/img/logo-192.png" alt="" width="28" height="28"><span>Worldscape</span></a>
+    <a class="link" href="features/index.html">Features</a>
+    <a class="link" href="quickstart/index.html">Quickstart</a>
+    <a class="btn btn-primary btn-nav" href="download/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg><span>Download</span></a>
     <button class="icon-btn" id="theme" type="button" aria-label="Switch between light and dark appearance" title="Appearance">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
     </button>
   </div>
 </header>
-
-<main id="top">
+<main id="content">
   <section class="hero" style="padding-top:clamp(48px,8vw,96px)">
     <div class="wrap">
       <p class="eyebrow">Desktop app for Windows, macOS and Linux</p>
-      <h1>Write the book.<br>Plan the world.</h1>
+      <h1>Write the book.<br><em>Plan the world.</em></h1>
       <p class="lede">Worldscape keeps your manuscript, story notes and mood boards in a single project, side by side. It works offline, and your files stay on your computer.</p>
       <div class="actions">
-        <a id="main" class="btn btn-primary" href="#download">
+        <a id="main" class="btn btn-primary" href="download/index.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>
           <span id="main-label">Download</span>
         </a>
-        <a class="btn btn-ghost" href="#inside">See what’s inside</a>
+        <a class="btn btn-ghost" href="features/index.html">Explore features</a>
       </div>
       <p id="meta" class="meta" aria-live="polite">Looking up the latest version…</p>
 
@@ -306,7 +52,6 @@ footer a:hover{color:var(--ink)}
       </ul>
     </div>
   </section>
-
   <section id="inside">
     <div class="wrap">
       <div class="head">
@@ -333,7 +78,6 @@ footer a:hover{color:var(--ink)}
       </div>
     </div>
   </section>
-
   <section>
     <div class="wrap rows">
       <div class="row">
@@ -384,269 +128,17 @@ footer a:hover{color:var(--ink)}
       </div>
     </div>
   </section>
-
-  <section id="download">
-    <div class="wrap">
-      <div class="head">
-        <p class="eyebrow">Download</p>
-        <h2>Get Worldscape</h2>
-        <p id="dl-sub">Pick the installer for your computer. You only need to download once, because the app updates itself afterwards.</p>
-      </div>
-      <div id="list" class="dl-grid">
-        <div class="dl-state" id="dl-loading">Looking up the latest files…</div>
-      </div>
-      <noscript><p class="meta">JavaScript is off, so the file list can’t load. <a href="https://github.com/Kaniac04/WorldScape-Releases/releases/latest">Open the downloads page on GitHub</a>.</p></noscript>
-    </div>
-  </section>
-
-  <section id="install">
-    <div class="wrap install">
-      <div>
-        <p class="eyebrow">First install</p>
-        <h2>Getting past the first-run warning</h2>
-        <p class="note">Worldscape isn’t code-signed yet, so Windows and macOS may warn you the first time you open it. The steps here get past that. After the first install, the app updates itself.</p>
-      </div>
-      <div class="acc">
-        <details open>
-          <summary>Windows</summary>
-          <div class="body"><p>Run the installer. If a blue “Windows protected your PC” window appears, choose <b>More info</b>, then <b>Run anyway</b>.</p></div>
-        </details>
-        <details>
-          <summary>macOS</summary>
-          <div class="body">
-            <ol>
-              <li>Open the <code>.dmg</code> and drag Worldscape into Applications.</li>
-              <li>Open <b>Terminal</b> (press Cmd+Space and type Terminal), paste this command and press Return. You only do this once. It lets macOS open an app that isn’t notarized yet.
-                <div class="cmd"><code id="xcmd">xattr -cr /Applications/Worldscape.app</code><button type="button" id="copy">Copy</button></div>
-              </li>
-              <li>Open Worldscape from Applications as usual. If macOS still blocks it, go to <b>System Settings → Privacy &amp; Security</b> and choose <b>Open Anyway</b>.</li>
-            </ol>
-          </div>
-        </details>
-        <details>
-          <summary>Linux</summary>
-          <div class="body"><p>For the AppImage, right-click the file, open Properties and allow it to run as a program (or run <code>chmod +x</code> on it), then open it. The <code>.deb</code> and <code>.rpm</code> files install with your package manager.</p></div>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <section id="updates">
-    <div class="wrap">
-      <div class="head">
-        <p class="eyebrow">Updates</p>
-        <h2>Download once. Updates come to you.</h2>
-        <p>Installed copies of Worldscape look after their own updates, and they never change anything without asking.</p>
-      </div>
-      <ol class="steps">
-        <li><h3>It checks quietly</h3><p>Shortly after the app starts, and again every six hours, it looks for a newer version.</p></li>
-        <li><h3>It downloads in the background</h3><p>When a new version is ready, a small bar appears. Nothing installs on its own.</p></li>
-        <li><h3>You choose the moment</h3><p>Select <b>Restart and update</b>. Worldscape saves your chapters and every open pane first. If anything can’t be saved, the update is cancelled and nothing changes.</p></li>
-      </ol>
-      <p class="fine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.2 7 10 4-1.8 7-5.5 7-10V6z"/><path d="m9 12 2.2 2.2L15 10"/></svg><span>Updates are signed. The app only accepts packages signed with Worldscape’s own key.</span></p>
-    </div>
-  </section>
-
-  <section id="quickstart">
-    <div class="wrap">
-      <div class="head">
-        <p class="eyebrow">Quickstart guide</p>
-        <h2>From first launch to first chapter</h2>
-        <p>Write your manuscript, build your world and gather your inspiration in one desktop app. Screenshots come from a demo project, The Ember Crown.</p>
-      </div>
-      <div class="qs">
-        <nav class="qs-toc" aria-label="Quickstart sections"><p class="alt-h">In this guide</p><ol><li><a href="#qs-1"><span>1</span>What is Worldscape?</a></li><li><a href="#qs-2"><span>2</span>Install and quick start</a></li><li><a href="#qs-3"><span>3</span>Library and projects</a></li><li><a href="#qs-4"><span>4</span>The workspace</a></li><li><a href="#qs-5"><span>5</span>WorldSkript</a></li><li><a href="#qs-6"><span>6</span>Worldbook</a></li><li><a href="#qs-7"><span>7</span>MoodBoard</a></li><li><a href="#qs-8"><span>8</span>How the apps stay in sync</a></li><li><a href="#qs-9"><span>9</span>Where your files live</a></li><li><a href="#qs-10"><span>10</span>Shortcuts cheat sheet</a></li></ol></nav>
-        <div class="qs-body"><div class="qs-chap" id="qs-1"><header><span class="qs-n">1</span><div><h3 class="qs-t">What is Worldscape?</h3><p>The three apps and how they fit together.</p></div></header><p>Worldscape keeps everything about a book in one place. Each <b>project</b> links a manuscript to its world, and you work on both side by side.</p><div class="qs-tbl"><table><thead><tr><th>App</th><th>What it is for</th></tr></thead><tbody><tr><td><b>WorldSkript</b></td><td>Writing the manuscript: chapters, page layout, notes, dictionary, citations, images and history.</td></tr><tr><td><b>Worldbook</b></td><td>Your story bible: characters, places and lore, relationships, storyboard, timeline and calendars.</td></tr><tr><td><b>MoodBoard</b></td><td>Free-form boards of pictures, notes and colour swatches linked to your characters and places.</td></tr></tbody></table></div><p>You can open any app on its own (<b>full view</b>) or two together (<b>split view</b>).</p><p class="note"><b>Your files stay yours.</b> Worldscape works fully offline. Every project is saved in a folder you choose on your own computer.</p></div><div class="qs-chap" id="qs-2"><header><span class="qs-n">2</span><div><h3 class="qs-t">Install and quick start</h3><p>Install, first-run warnings, updates and your first five minutes.</p></div></header><h3>Install and first launch</h3><ul class="qs-list"><li>Download the installer for your system from the <a href="https://github.com/Kaniac04/WorldScape-Releases/releases/latest">releases page</a>: Windows (<code>.exe</code> or <code>.msi</code>), macOS (<code>.dmg</code>) or Linux (<code>.deb</code>, <code>.rpm</code> or <code>.AppImage</code>). Worldscape is distributed only as installation files.</li><li>Install and open <b>Worldscape</b>. The app works fully offline, and nothing is pre-filled: no sample projects and no dictionaries.</li><li>The app checks for updates in the background. Nothing installs by itself: when a new version is ready, select <b>Restart and update</b>. Your work is saved first.</li></ul><h3>If your system shows a warning</h3><p>Worldscape is not code-signed yet, so Windows and macOS may warn you the first time you open it.</p><ul class="qs-list"><li><b>Windows.</b> If a blue “Windows protected your PC” window appears, choose <b>More info</b>, then <b>Run anyway</b>.</li><li><b>macOS.</b> Open the <code>.dmg</code> and drag Worldscape into Applications. Then run <code>xattr -cr /Applications/Worldscape.app</code> once in Terminal. If macOS still blocks it, choose <b>Open Anyway</b> in System Settings → Privacy &amp; Security.</li><li><b>Linux.</b> Make the AppImage executable (right-click → Properties, or <code>chmod +x</code>) and open it. The <code>.deb</code> and <code>.rpm</code> files install with your package manager.</li></ul><h3>Updates</h3><p>Worldscape checks shortly after it starts and then every six hours. When a new version is ready, a small bar appears and nothing installs until you select <b>Restart and update</b>. Worldscape saves your chapters and open panels first, and cancels the update if anything cannot be saved. Updates are signed, and the app only accepts packages signed with Worldscape’s own key. You can also check at any time in <b>Settings</b>.</p><h3>Your first five minutes</h3><ol class="qs-ol"><li><b>Create a project.</b> On the start page, select <b>New project</b>, name it and select <b>Create &amp; open</b>.</li><li><b>Set up your book.</b> In WorldSkript, select <b>Page layout</b> to set the title, author, book size, typeface and cover.</li><li><b>Write.</b> Add chapters with <b>Chapter</b> and start writing. Chapter titles are added to the contents for you.</li><li><b>Build your world.</b> Switch to Worldbook to add characters and places.</li><li><b>Gather inspiration.</b> Open MoodBoard to collect images, notes and colours for a character or place.</li></ol></div><div class="qs-chap" id="qs-3"><header><span class="qs-n">3</span><div><h3 class="qs-t">Library and projects</h3><p>Collections, new projects and settings.</p></div></header><p>The start page is your <b>Library</b>. Use <b>Shelf</b> (book spines) or <b>Grid</b> (covers) to browse.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig01.webp" width="1000" height="625" alt="The library before any project exists."></div><figcaption><b>Figure 1.</b> The library before any project exists.</figcaption></figure><h3>Create your first project</h3><ol class="qs-ol"><li>Select <b>New project</b>.</li><li>Give it a <b>name</b>, an optional <b>note</b> and a <b>cover colour</b>.</li><li>Choose a <b>collection</b> (for example one book series), or create a new one by typing its name.</li><li>Pick where the project folder should be saved, then select <b>Create &amp; open</b>.</li></ol><p>Your project now appears on the shelf, and you can drag books between collections to reorder them.</p><div class="car" role="group" aria-roledescription="carousel" aria-label="Screenshots, 2 figures" tabindex="0"><div class="car-track"><figure class="car-slide" aria-label="Figure 2"><div class="frame"><img loading="lazy" src="assets/img/qs/fig02.webp" width="1000" height="625" alt="The New project dialog."></div><figcaption><b>Figure 2.</b> The New project dialog.</figcaption></figure><figure class="car-slide" aria-label="Figure 3"><div class="frame"><img loading="lazy" src="assets/img/qs/fig03.webp" width="1000" height="625" alt="The library with a project in a collection."></div><figcaption><b>Figure 3.</b> The library with a project in a collection.</figcaption></figure></div><div class="car-bar"><button type="button" class="car-btn" data-d="-1" aria-label="Previous screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><div class="car-dots"></div><span class="car-count" aria-live="polite"></span><button type="button" class="car-btn" data-d="1" aria-label="Next screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></div><h3>Settings and shortcuts</h3><p>Open <b>Settings</b> (gear icon, top right) to <b>check for updates</b> and to <b>change any keyboard shortcut</b>. If two actions share a key, they are outlined in red until you fix it.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig04.webp" width="1000" height="625" alt="Settings, with updates and keyboard shortcuts."></div><figcaption><b>Figure 4.</b> Settings, with updates and keyboard shortcuts.</figcaption></figure><p class="note"><b>Appearance.</b> The half-circle button in the top bar switches the whole app between Light, Dark and High contrast, or follows your system setting.</p></div><div class="qs-chap" id="qs-4"><header><span class="qs-n">4</span><div><h3 class="qs-t">The workspace</h3><p>Write, Plan and MoodBoard, full view and split view.</p></div></header><p>Open a project (double-click it) and you land in <b>Write + Plan</b> split view.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig05.webp" width="1000" height="625" alt="WorldSkript and Worldbook side by side."></div><figcaption><b>Figure 5.</b> WorldSkript and Worldbook side by side.</figcaption></figure><div class="qs-tbl"><table><thead><tr><th>Action</th><th>How</th></tr></thead><tbody><tr><td>Show an app</td><td>Select <b>WorldSkript</b>, <b>Worldbook</b> or <b>MoodBoard</b> in the top bar. Select two to see them side by side.</td></tr><tr><td>Show one app only</td><td><b>Double-click</b> its button.</td></tr><tr><td>Switch directly</td><td>Ctrl/⌘ + 1 Write, Ctrl/⌘ + 2 Plan, Ctrl/⌘ + 3 MoodBoard.</td></tr><tr><td>Swap left and right</td><td>The ⇄ button.</td></tr><tr><td>Second monitor</td><td><b>Pop out</b> moves a pane into its own window.</td></tr><tr><td>Back to the library</td><td>The <b>Library</b> button, or Ctrl/⌘ + 0.</td></tr></tbody></table></div><p>The <b>Saved</b> indicator in the top bar tells you that all apps have saved.</p></div><div class="qs-chap" id="qs-5"><header><span class="qs-n">5</span><div><h3 class="qs-t">WorldSkript</h3><p>Page layout, chapters, notes, flags and events, citations, history and more.</p></div></header><h3>Page layout</h3><p>Select <b>Page layout</b> to set up the whole book. A live preview shows your changes.</p><ul class="qs-list"><li><b>Manuscript:</b> rename the manuscript, add the author name and choose the cover colour.</li><li><b>Book size:</b> nine formats, from mass-market paperback to A4.</li><li><b>Typeface:</b> eleven book fonts.</li><li><b>Text:</b> size, line spacing, paragraph indent, alignment and margins.</li><li><b>Chapters:</b> heading style, numbering and chapter openers.</li><li><b>Page and cover:</b> paper tone, page numbers, headers and cover design.</li></ul><div class="car" role="group" aria-roledescription="carousel" aria-label="Screenshots, 5 figures" tabindex="0"><div class="car-track"><figure class="car-slide" aria-label="Figure 6"><div class="frame"><img loading="lazy" src="assets/img/qs/fig06.webp" width="1000" height="625" alt="Book size."></div><figcaption><b>Figure 6.</b> Book size.</figcaption></figure><figure class="car-slide" aria-label="Figure 7"><div class="frame"><img loading="lazy" src="assets/img/qs/fig07.webp" width="1000" height="625" alt="Typeface."></div><figcaption><b>Figure 7.</b> Typeface.</figcaption></figure><figure class="car-slide" aria-label="Figure 8"><div class="frame"><img loading="lazy" src="assets/img/qs/fig08.webp" width="1000" height="625" alt="Text."></div><figcaption><b>Figure 8.</b> Text.</figcaption></figure><figure class="car-slide" aria-label="Figure 9"><div class="frame"><img loading="lazy" src="assets/img/qs/fig09.webp" width="1000" height="625" alt="Chapters."></div><figcaption><b>Figure 9.</b> Chapters.</figcaption></figure><figure class="car-slide" aria-label="Figure 10"><div class="frame"><img loading="lazy" src="assets/img/qs/fig10.webp" width="1000" height="625" alt="Page and cover."></div><figcaption><b>Figure 10.</b> Page and cover.</figcaption></figure></div><div class="car-bar"><button type="button" class="car-btn" data-d="-1" aria-label="Previous screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><div class="car-dots"></div><span class="car-count" aria-live="polite"></span><button type="button" class="car-btn" data-d="1" aria-label="Next screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></div><h3>Writing, chapters and notes</h3><p>Type directly on the page. Add a <b>chapter</b> with the <b>Chapter</b> button, or press <b>Enter three times</b>. Chapters start on a new page and appear in the <b>Index</b> on their own. Select text to:</p><ul class="qs-list"><li>add a <b>note</b>, shown as a yellow sticky note in the <b>Notes</b> panel (Ctrl/⌘ + Alt + N);</li><li>flag a <b>major event</b> at the cursor (Ctrl/⌘ + Alt + E), shown as a dot in the margin;</li><li>right-click to add a note, a flag or an artifact (a character, place or lore item).</li></ul><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig11.webp" width="1000" height="625" alt="Writing with a note."></div><figcaption><b>Figure 11.</b> Writing with a note.</figcaption></figure><h3>Navigate with the outline</h3><p>The <b>☰</b> button opens <b>Chapters</b> and <b>Events</b>. Jump to any chapter, set one aside, or send events to Worldbook.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig12.webp" width="1000" height="625" alt="The outline."></div><figcaption><b>Figure 12.</b> The outline.</figcaption></figure><h3>Events: send and add in both directions</h3><p>An <b>event</b> is a key moment in a chapter. A flag in WorldSkript and an event in the Worldbook storyboard are two views of the same moment, and you can start from either side. Click inside a chapter first: the <b>Events</b> tab only lists the chapter your cursor is in.</p><h4>WorldSkript → Worldbook (send a flag)</h4><ol class="qs-ol"><li>Click in the chapter where it happens, then select the <b>flag</b> button in the toolbar (or press Ctrl/⌘ + Alt + E).</li><li>Leave <b>Worldbook event</b> on <b>Independent flag</b>, type a label and select <b>Add flag</b>. A dot appears in the margin beside that line.</li><li>Open <b>☰ → Events</b>. Your flag is listed as <b>WorldSkript</b>. Select <b>Send to storyboard</b>.</li><li>The flag is now linked. The list says <b>Worldbook · In manuscript</b>, and the event appears under that chapter in the Worldbook storyboard.</li></ol><h4>Worldbook → WorldSkript (add at cursor)</h4><ol class="qs-ol"><li>In Worldbook, open <b>Storyboard</b> and select <b>+ event</b> on a chapter (see section 6).</li><li>In WorldSkript, put the cursor in that chapter and open <b>☰ → Events</b>. Events planned in Worldbook but not yet in the text are marked <b>Worldbook · Planned</b>.</li><li>Select <b>Add at cursor</b> (the button reads <b>Add at chapter start</b> when your cursor is in another chapter). The flag is placed in the text and the event now reads <b>In manuscript</b>.</li></ol><p>You can also link a flag to a Worldbook event while you create it: in the <b>Add flag</b> dialog, pick the event from the <b>Worldbook event</b> list.</p><h4>Working with a flag</h4><ul class="qs-list"><li>Select its dot in the margin to <b>Link Worldbook event…</b>, <b>Rename flag</b> or <b>Remove flag</b>.</li><li>In Worldbook, a linked event carries a <b>Manuscript flag</b> button. Select it and WorldSkript opens at that exact spot, next to Worldbook.</li></ul><div class="car" role="group" aria-roledescription="carousel" aria-label="Screenshots, 7 figures" tabindex="0"><div class="car-track"><figure class="car-slide" aria-label="Figure 13"><div class="frame"><img loading="lazy" src="assets/img/qs/fig13.webp" width="1000" height="625" alt="The Add flag dialog."></div><figcaption><b>Figure 13.</b> The Add flag dialog.</figcaption></figure><figure class="car-slide" aria-label="Figure 14"><div class="frame"><img loading="lazy" src="assets/img/qs/fig14.webp" width="1000" height="625" alt="The Events tab with a flag ready to send."></div><figcaption><b>Figure 14.</b> The Events tab with a flag ready to send.</figcaption></figure><figure class="car-slide" aria-label="Figure 15"><div class="frame"><img loading="lazy" src="assets/img/qs/fig15.webp" width="1000" height="625" alt="The flag has been sent to the storyboard."></div><figcaption><b>Figure 15.</b> The flag has been sent to the storyboard.</figcaption></figure><figure class="car-slide" aria-label="Figure 16"><div class="frame"><img loading="lazy" src="assets/img/qs/fig16.webp" width="1000" height="625" alt="Planned Worldbook events."></div><figcaption><b>Figure 16.</b> Planned Worldbook events.</figcaption></figure><figure class="car-slide" aria-label="Figure 17"><div class="frame"><img loading="lazy" src="assets/img/qs/fig17.webp" width="1000" height="625" alt="A Worldbook event placed in the manuscript."></div><figcaption><b>Figure 17.</b> A Worldbook event placed in the manuscript.</figcaption></figure><figure class="car-slide" aria-label="Figure 18"><div class="frame"><img loading="lazy" src="assets/img/qs/fig18.webp" width="1000" height="625" alt="The flag menu in the margin."></div><figcaption><b>Figure 18.</b> The flag menu in the margin.</figcaption></figure><figure class="car-slide" aria-label="Figure 19"><div class="frame"><img loading="lazy" src="assets/img/qs/fig19.webp" width="1000" height="625" alt="Jumping from a Worldbook event to its flag."></div><figcaption><b>Figure 19.</b> Jumping from a Worldbook event to its flag.</figcaption></figure></div><div class="car-bar"><button type="button" class="car-btn" data-d="-1" aria-label="Previous screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><div class="car-dots"></div><span class="car-count" aria-live="polite"></span><button type="button" class="car-btn" data-d="1" aria-label="Next screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></div><h3>Guides in the left margin</h3><p>The thin rail on the far left lists the cover, the index, every chapter and every flag as small dashes, so you can move through a long manuscript quickly. Long dashes are chapters and short gold dashes are event flags. Hover over one to see its name and select it to jump there. The dash for the part you are reading is highlighted.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig20.webp" width="1000" height="625" alt="Margin guides with a hover label."></div><figcaption><b>Figure 20.</b> Margin guides with a hover label.</figcaption></figure><h3>Artifacts</h3><p>The <b>Artifacts</b> panel lists the characters, places and lore involved in the chapter you are reading, taken from Worldbook.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig21.webp" width="1000" height="625" alt="The Artifacts panel."></div><figcaption><b>Figure 21.</b> The Artifacts panel.</figcaption></figure><h3>Dictionary</h3><p>Add your own words with a definition, or import a dictionary. With spell check on, right-click a red word to correct it or <b>Add to dictionary</b>.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig22.webp" width="1000" height="625" alt="The Dictionary panel."></div><figcaption><b>Figure 22.</b> The Dictionary panel.</figcaption></figure><h3>Citations</h3><p>Add sources by hand or import them from <b>Zotero</b>, then cite them in the text. The bibliography is added at the end of the book and to the index.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig23.webp" width="1000" height="625" alt="The Citations panel."></div><figcaption><b>Figure 23.</b> The Citations panel.</figcaption></figure><h3>Scrapyard</h3><p>Not sure about a chapter? Send it to the <b>Scrapyard</b>. <b>Restore</b> puts it back in its original place, and <b>Place…</b> lets you choose another position. Its history is kept.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig24.webp" width="1000" height="625" alt="The Scrapyard."></div><figcaption><b>Figure 24.</b> The Scrapyard.</figcaption></figure><h3>History</h3><p>Every chapter keeps saved versions. Save one yourself with <b>Save a version</b> (or Ctrl/⌘ + S); WorldSkript also saves them automatically. Select a version to compare it to the current text, then restore it if you wish.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig25.webp" width="1000" height="625" alt="Chapter history."></div><figcaption><b>Figure 25.</b> Chapter history.</figcaption></figure><h3>Focus mode, spell check and more</h3><p>The <b>…</b> menu holds <b>Dictionaries</b>, <b>Spell check</b> (on or off), <b>Focus mode</b> (dims the menus while you type) and <b>Backup</b>. Use <b>Export</b> to create a Word or EPUB file.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig26.webp" width="1000" height="625" alt="The more-tools menu."></div><figcaption><b>Figure 26.</b> The more-tools menu.</figcaption></figure><h3>Extra pages and the index</h3><p>Use <b>+ Extra page</b> (the small button under the index, and between extra pages) to add a prelude, a dedication, notes or a map page before the first chapter.</p><ul class="qs-list"><li>Select <b>+ Extra page</b>. The cursor jumps to the page heading.</li><li>Type a <b>heading</b> (for example Prelude), then write the page text, or place an image from the <b>Images</b> panel.</li><li>The heading is added to the <b>Contents</b> by itself, with its own page number. A page with <b>no heading</b> stays out of the index.</li><li>Use the arrows on the page to move it up or down, and the bin to delete it. Chapters added later also appear in the index by themselves.</li></ul><p>The first screenshot shows the index before an extra page. After adding the extra page Prelude, it appears in the index, and the page itself sits in front of Chapter 1.</p><div class="car" role="group" aria-roledescription="carousel" aria-label="Screenshots, 3 figures" tabindex="0"><div class="car-track"><figure class="car-slide" aria-label="Figure 27"><div class="frame"><img loading="lazy" src="assets/img/qs/fig27.webp" width="1000" height="625" alt="The index before an extra page."></div><figcaption><b>Figure 27.</b> The index before an extra page.</figcaption></figure><figure class="car-slide" aria-label="Figure 28"><div class="frame"><img loading="lazy" src="assets/img/qs/fig28.webp" width="1000" height="625" alt="The index with the extra page."></div><figcaption><b>Figure 28.</b> The index with the extra page.</figcaption></figure><figure class="car-slide" aria-label="Figure 29"><div class="frame"><img loading="lazy" src="assets/img/qs/fig29.webp" width="1000" height="625" alt="The extra page."></div><figcaption><b>Figure 29.</b> The extra page.</figcaption></figure></div><div class="car-bar"><button type="button" class="car-btn" data-d="-1" aria-label="Previous screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><div class="car-dots"></div><span class="car-count" aria-live="polite"></span><button type="button" class="car-btn" data-d="1" aria-label="Next screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></div><p class="note"><b>Images.</b> Place pictures in your manuscript or on extra pages from the <b>Images</b> panel. Placed images can be resized, aligned and captioned.</p></div><div class="qs-chap" id="qs-6"><header><span class="qs-n">6</span><div><h3 class="qs-t">Worldbook</h3><p>Characters, places, relationships, storyboard, timeline and calendars.</p></div></header><p>Worldbook has eight sections in its left menu.</p><h3>Characters</h3><p>Select <b>+ New character</b> and fill in name, role, appearance and backstory. You can also record how a character changes from chapter to chapter.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig30.webp" width="1000" height="625" alt="Characters."></div><figcaption><b>Figure 30.</b> Characters.</figcaption></figure><h3>Places &amp; Lore</h3><p>Cities, landmarks, factions, magic systems and items. Link each entry to a chapter and, if you like, to a calendar.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig31.webp" width="1000" height="625" alt="Places and lore."></div><figcaption><b>Figure 31.</b> Places and lore.</figcaption></figure><h3>Relationships</h3><p>Record how characters, places, lore, chapters and events relate, and how those relationships change over the story. The graph shows connections, and you can filter by entity or chapter.</p><h4>Link relationships</h4><p>Besides a relationship between two entities, you can link <b>a relationship to another relationship</b>, or <b>a relationship to an entity</b> (a place, an event, a calendar event).</p><ol class="qs-ol"><li>Select <b>+ Link entity</b>.</li><li>Choose the <b>Source relation</b>, the one you are linking from.</li><li>Under <b>Link to</b>, choose <b>An existing relation</b> or <b>An existing entity</b> and pick it.</li><li>Add an optional <b>label</b> (for example Caused by) and the chapter it applies to, then select <b>Save link</b>.</li></ol><p>A link is drawn as a <b>dashed line</b> from the middle of the source relation. Below the graph, all links are listed under <b>Links</b>, and they also show up as gold chips on that chapter in the Storyboard.</p><div class="car" role="group" aria-roledescription="carousel" aria-label="Screenshots, 5 figures" tabindex="0"><div class="car-track"><figure class="car-slide" aria-label="Figure 32"><div class="frame"><img loading="lazy" src="assets/img/qs/fig32.webp" width="1000" height="625" alt="Relationships."></div><figcaption><b>Figure 32.</b> Relationships.</figcaption></figure><figure class="car-slide" aria-label="Figure 33"><div class="frame"><img loading="lazy" src="assets/img/qs/fig33.webp" width="1000" height="625" alt="The relationship graph."></div><figcaption><b>Figure 33.</b> The relationship graph.</figcaption></figure><figure class="car-slide" aria-label="Figure 34"><div class="frame"><img loading="lazy" src="assets/img/qs/fig34.webp" width="1000" height="625" alt="The link form."></div><figcaption><b>Figure 34.</b> The link form.</figcaption></figure><figure class="car-slide" aria-label="Figure 35"><div class="frame"><img loading="lazy" src="assets/img/qs/fig35.webp" width="1000" height="625" alt="The relationship graph with links."></div><figcaption><b>Figure 35.</b> The relationship graph with links.</figcaption></figure><figure class="car-slide" aria-label="Figure 36"><div class="frame"><img loading="lazy" src="assets/img/qs/fig36.webp" width="1000" height="625" alt="The list of relationships and links."></div><figcaption><b>Figure 36.</b> The list of relationships and links.</figcaption></figure></div><div class="car-bar"><button type="button" class="car-btn" data-d="-1" aria-label="Previous screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><div class="car-dots"></div><span class="car-count" aria-live="polite"></span><button type="button" class="car-btn" data-d="1" aria-label="Next screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></div><h3>Storyboard</h3><p>Arcs, chapters and events. <b>Chapters created here appear in WorldSkript, and the other way round.</b> Add events to a chapter here, and place them in the manuscript wherever you want. Scroll down past the progress board to the <b>arcs</b>. An arc holds its chapters, and each chapter holds its events:</p><ul class="qs-list"><li>Chapters made in WorldSkript appear here by themselves, inside the <b>Manuscript</b> arc. The <b>Visible</b> switch shows whether the chapter is in the manuscript.</li><li>Select <b>+ event</b> on a chapter to open the event editor: title, order, description, characters, places and calendar date. Use the <b>⋮</b> menu on an event to open or delete it.</li><li>Round initials next to a chapter title are the characters involved. Relationships and links for that chapter show as gold chips under its notes.</li><li>An event that has a flag in the manuscript carries a <b>Manuscript flag</b> button, which opens WorldSkript at that spot.</li></ul><p>See “Events: send and add in both directions” in <a href="#qs-5">section 5</a> for how events move between the two apps.</p><div class="car" role="group" aria-roledescription="carousel" aria-label="Screenshots, 3 figures" tabindex="0"><div class="car-track"><figure class="car-slide" aria-label="Figure 37"><div class="frame"><img loading="lazy" src="assets/img/qs/fig37.webp" width="1000" height="625" alt="The storyboard."></div><figcaption><b>Figure 37.</b> The storyboard.</figcaption></figure><figure class="car-slide" aria-label="Figure 38"><div class="frame"><img loading="lazy" src="assets/img/qs/fig38.webp" width="1000" height="625" alt="Arcs, chapters and events."></div><figcaption><b>Figure 38.</b> Arcs, chapters and events.</figcaption></figure><figure class="car-slide" aria-label="Figure 39"><div class="frame"><img loading="lazy" src="assets/img/qs/fig39.webp" width="1000" height="625" alt="A chapter with events, relationships and links."></div><figcaption><b>Figure 39.</b> A chapter with events, relationships and links.</figcaption></figure></div><div class="car-bar"><button type="button" class="car-btn" data-d="-1" aria-label="Previous screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><div class="car-dots"></div><span class="car-count" aria-live="polite"></span><button type="button" class="car-btn" data-d="1" aria-label="Next screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></div><h3>Timeline</h3><p>See your whole story at a glance: chapter lengths, events and relationship shifts, in order.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig40.webp" width="1000" height="625" alt="The timeline."></div><figcaption><b>Figure 40.</b> The timeline.</figcaption></figure><h3>Calendar</h3><p>Use the standard calendar or create your own fantasy calendar with custom months, weeks and named days.</p><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig41.webp" width="1000" height="625" alt="The calendar."></div><figcaption><b>Figure 41.</b> The calendar.</figcaption></figure><h3>Search and History</h3><p><b>Search</b> finds anything in the world (use #tags). <b>History</b> keeps automatic snapshots of your world that you can restore.</p><div class="car" role="group" aria-roledescription="carousel" aria-label="Screenshots, 2 figures" tabindex="0"><div class="car-track"><figure class="car-slide" aria-label="Figure 42"><div class="frame"><img loading="lazy" src="assets/img/qs/fig42.webp" width="1000" height="625" alt="Search."></div><figcaption><b>Figure 42.</b> Search.</figcaption></figure><figure class="car-slide" aria-label="Figure 43"><div class="frame"><img loading="lazy" src="assets/img/qs/fig43.webp" width="1000" height="625" alt="World history."></div><figcaption><b>Figure 43.</b> World history.</figcaption></figure></div><div class="car-bar"><button type="button" class="car-btn" data-d="-1" aria-label="Previous screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><div class="car-dots"></div><span class="car-count" aria-live="polite"></span><button type="button" class="car-btn" data-d="1" aria-label="Next screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div></div></div><div class="qs-chap" id="qs-7"><header><span class="qs-n">7</span><div><h3 class="qs-t">MoodBoard</h3><p>Boards of pictures, notes and colour swatches.</p></div></header><p>Each character, place or lore entry can have its own board. Add <b>images</b>, <b>notes</b> and <b>colour swatches</b>. A palette is built from your pictures, and <b>Tidy</b> arranges everything into a neat collage.</p><ul class="qs-list"><li>Add pictures with <b>+ Images</b>, by dropping files or by pasting.</li><li>Boards can also be <b>Independent</b>, linked to nothing.</li><li><b>Open in Worldbook</b> jumps to the linked entry.</li></ul><figure class="qs-fig"><div class="frame"><img loading="lazy" src="assets/img/qs/fig44.webp" width="1000" height="625" alt="A MoodBoard."></div><figcaption><b>Figure 44.</b> A MoodBoard.</figcaption></figure></div><div class="qs-chap" id="qs-8"><header><span class="qs-n">8</span><div><h3 class="qs-t">How the apps stay in sync</h3><p>What is shared between the three apps.</p></div></header><ul class="qs-list"><li>A chapter created in <b>WorldSkript</b> appears in the <b>Worldbook</b> storyboard, and the other way round.</li><li>The <b>Visible</b> switch on a Worldbook chapter shows whether it is in the manuscript or set aside in the Scrapyard.</li><li><b>Delete from manuscript</b> in WorldSkript removes the text only. <b>Complete deletion</b> in Worldbook removes the chapter everywhere and cannot be undone.</li><li>Characters and places from Worldbook feed the <b>Artifacts</b> panel and the MoodBoard sidebar.</li><li>An event sent from WorldSkript (<b>☰ → Events → Send to storyboard</b>) appears in the Worldbook chapter. An event planned in Worldbook (<b>+ event</b>) can be placed in the text with <b>Add at cursor</b>. Both stay linked, so the <b>Manuscript flag</b> button always finds the spot.</li><li>Extra pages and new chapters are added to the WorldSkript index by themselves.</li></ul></div><div class="qs-chap" id="qs-9"><header><span class="qs-n">9</span><div><h3 class="qs-t">Where your files live</h3><p>The project folder and backups.</p></div></header><p>Everything is saved in your project folder, so you can back it up or sync it like any other folder:</p><pre class="qs-tree"><b>&lt;Project name&gt;/</b>
-  worldscape.json    <i>project settings and links</i>
-  manuscript/        <i>your WorldSkript drafts</i>
-  world/             <i>your Worldbook file</i>
-  moodboards/        <i>your boards and pictures</i></pre><p>Removing a book from the library only removes its card. Your files are never deleted.</p><p class="note"><b>Backups.</b> Use <b>Backup &amp; restore</b> in the WorldSkript <b>…</b> menu to save or load a copy of your work.</p></div><div class="qs-chap" id="qs-10"><header><span class="qs-n">10</span><div><h3 class="qs-t">Shortcuts cheat sheet</h3><p>Default keyboard shortcuts.</p></div></header><p>Every shortcut can be changed in <b>Settings</b>. Defaults:</p><div class="qs-tbl"><table><thead><tr><th>Action</th><th>Shortcut</th></tr></thead><tbody><tr><td>Write / Plan / MoodBoard</td><td><kbd>Ctrl/⌘</kbd> <kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd></td></tr><tr><td>Back to library</td><td><kbd>Ctrl/⌘</kbd> <kbd>0</kbd></td></tr><tr><td>Save a version</td><td><kbd>Ctrl/⌘</kbd> <kbd>S</kbd></td></tr><tr><td>Find / Replace</td><td><kbd>Ctrl/⌘</kbd> <kbd>F</kbd> / <kbd>H</kbd></td></tr><tr><td>Add note</td><td><kbd>Ctrl/⌘</kbd> <kbd>Alt</kbd> <kbd>N</kbd></td></tr><tr><td>Sticky notes panel</td><td><kbd>Ctrl/⌘</kbd> <kbd>Alt</kbd> <kbd>M</kbd></td></tr><tr><td>Flag a major event</td><td><kbd>Ctrl/⌘</kbd> <kbd>Alt</kbd> <kbd>E</kbd></td></tr><tr><td>Cite a source</td><td><kbd>Ctrl/⌘</kbd> <kbd>Alt</kbd> <kbd>R</kbd></td></tr><tr><td>Scene break</td><td><kbd>Ctrl/⌘</kbd> <kbd>Enter</kbd></td></tr><tr><td>New page</td><td><kbd>Ctrl/⌘</kbd> <kbd>Alt</kbd> <kbd>Enter</kbd></td></tr><tr><td>Paragraph styles</td><td><kbd>Ctrl/⌘</kbd> <kbd>Alt</kbd> <kbd>0–3</kbd></td></tr></tbody></table></div><p><i>Happy writing.</i></p></div></div>
-      </div>
-    </div>
-  </section>
+  <section class="cta"><div class="wrap"><div class="cat-end"><p><b>Free to download, and it works offline.</b> Windows, macOS and Linux installers are ready, and the app updates itself when you choose.</p><a class="btn btn-primary" href="download/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg><span>Download Worldscape</span></a></div></div></section>
 </main>
-
 <footer>
   <div class="wrap">
-    <a class="brand" href="#top"><img src="assets/img/logo-192.png" alt="" width="24" height="24"><span>Worldscape</span></a>
+    <a class="brand" href="index.html"><img src="assets/img/logo-192.png" alt="" width="24" height="24"><span>Worldscape</span></a>
+    <nav aria-label="Footer"><a href="index.html">Home</a><a href="features/index.html">Features</a><a href="quickstart/index.html">Quickstart</a><a href="download/index.html">Download</a></nav>
     <span id="foot-version"></span>
     <a id="foot-notes" href="https://github.com/Kaniac04/WorldScape-Releases/releases">Release notes</a>
     <a href="https://github.com/Kaniac04/WorldScape-Releases">GitHub</a>
   </div>
 </footer>
-
-<script>
-// Your PUBLIC releases repository, as "owner/repo".
-var REPO = "Kaniac04/WorldScape-Releases";
-
-(function () {
-  var $ = function (id) { return document.getElementById(id); };
-  var root = document.documentElement;
-
-  /* Appearance: follows the system, and the button overrides it (remembered on this device). */
-  try { var saved = localStorage.getItem("ws-theme"); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}
-  $("theme").addEventListener("click", function () {
-    var dark = root.getAttribute("data-theme") ? root.getAttribute("data-theme") === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-    var next = dark ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    try { localStorage.setItem("ws-theme", next); } catch (e) {}
-  });
-
-  $("copy").addEventListener("click", function () {
-    var b = this, t = $("xcmd").textContent;
-    var done = function () { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1800); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function () { b.textContent = "Select and copy"; });
-    else b.textContent = "Select and copy";
-  });
-
-  var releasesPage = "https://github.com/" + REPO + "/releases/latest";
-  var names = { windows: "Windows", macos: "macOS", linux: "Linux" };
-  var icons = {
-    windows: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="1"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="1"/><rect x="13" y="13" width="7.5" height="7.5" rx="1"/></svg>',
-    macos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.6"/><path d="M2.5 19.5h19"/></svg>',
-    linux: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7.5 10 3 2.5-3 2.5"/><path d="M13 15h3.5"/></svg>'
-  };
-  var dlIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>';
-
-  function detectOS() {
-    var p = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "").toLowerCase();
-    var ua = (navigator.userAgent || "").toLowerCase();
-    if (/android|iphone|ipad|ipod/.test(ua)) return "mobile";
-    if (p.indexOf("win") === 0 || ua.indexOf("windows") > -1) return "windows";
-    if (p.indexOf("mac") === 0 || ua.indexOf("mac os") > -1) return "macos";
-    if (p.indexOf("linux") > -1 || ua.indexOf("linux") > -1) return "linux";
-    return "";
-  }
-
-  // Maps one release file to a platform. Signatures and update bundles are skipped.
-  function classify(name) {
-    var n = name.toLowerCase();
-    if (/\.sig$|\.tar\.gz$|\.zip$|\.json$|\.blockmap$/.test(n)) return null;
-    var arm = /arm64|aarch64/.test(n);
-    if (/\.dmg$/.test(n)) return { os: "macos", rank: 0, label: "Disk image (.dmg)", short: ".dmg", tag: /universal/.test(n) ? "Apple silicon and Intel" : (arm ? "Apple silicon" : "Intel") };
-    if (/setup\.exe$/.test(n)) return { os: "windows", rank: 0, label: "Installer (.exe)", short: ".exe installer", tag: arm ? "ARM" : "64-bit" };
-    if (/\.msi$/.test(n)) return { os: "windows", rank: 1, label: "MSI package", tag: arm ? "ARM" : "64-bit" };
-    if (/\.appimage$/.test(n)) return { os: "linux", rank: 0, label: "AppImage", short: "AppImage", tag: "Runs on most distributions" };
-    if (/\.deb$/.test(n)) return { os: "linux", rank: 1, label: "Debian package (.deb)", tag: "Debian and Ubuntu" };
-    if (/\.rpm$/.test(n)) return { os: "linux", rank: 2, label: "RPM package (.rpm)", tag: "Fedora and openSUSE" };
-    return null;
-  }
-
-  function size(b) { return b > 1048576 ? (b / 1048576).toFixed(0) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB"; }
-  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-
-  function fail() {
-    $("meta").textContent = "";
-    var box = $("list"); box.innerHTML = "";
-    var s = el("div", "dl-state");
-    s.appendChild(document.createTextNode("We couldn’t load the file list just now. "));
-    var a = el("a", null, "Open the downloads page on GitHub"); a.href = releasesPage;
-    s.appendChild(a); s.appendChild(document.createTextNode("."));
-    box.appendChild(s);
-    $("main").href = releasesPage;
-    $("main-label").textContent = "Go to downloads";
-  }
-
-  function render(rel) {
-    var yours = detectOS();
-    var groups = { windows: [], macos: [], linux: [] };
-    (rel.assets || []).forEach(function (a) { var c = classify(a.name); if (c) groups[c.os].push({ a: a, c: c }); });
-    var version = (rel.tag_name || "").replace(/^v/i, "");
-    var date = rel.published_at ? new Date(rel.published_at).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }) : "";
-
-    var box = $("list"); box.innerHTML = "";
-    var order = ["windows", "macos", "linux"];
-    if (groups[yours] && groups[yours].length) order = [yours].concat(order.filter(function (o) { return o !== yours; }));
-
-    order.forEach(function (os) {
-      var items = groups[os].sort(function (x, y) { return x.c.rank - y.c.rank; });
-      var card = el("article", "os" + (os === yours ? " yours" : ""));
-      var head = el("div", "os-head");
-      var ic = el("span", "ic"); ic.innerHTML = icons[os];
-      head.appendChild(ic); head.appendChild(el("h3", null, names[os]));
-      if (os === yours) head.appendChild(el("span", "badge", "This computer"));
-      card.appendChild(head);
-
-      if (!items.length) { card.appendChild(el("p", "none", "No installer in this release.")); box.appendChild(card); return; }
-
-      var first = items[0];
-      card.appendChild(el("p", "sub", first.c.tag));
-      var btn = el("a", "btn " + (os === yours ? "btn-primary" : "btn-ghost"));
-      btn.href = first.a.browser_download_url;
-      btn.setAttribute("download", "");
-      btn.innerHTML = dlIcon;
-      var lab = el("span", null, "Download " + (first.c.short || first.c.label)); lab.style.marginRight = "auto"; lab.style.marginLeft = "2px";
-      btn.appendChild(lab); btn.appendChild(el("span", "sz", size(first.a.size)));
-      card.appendChild(btn);
-
-      if (items.length > 1) {
-        card.appendChild(el("p", "alt-h", "Other formats"));
-        var ul = el("ul", "alt");
-        items.slice(1).forEach(function (it) {
-          var li = el("li"), a = el("a", null, it.c.label); a.href = it.a.browser_download_url;
-          li.appendChild(a); li.appendChild(el("span", "tag", it.c.tag)); li.appendChild(el("span", "sz", size(it.a.size)));
-          ul.appendChild(li);
-        });
-        card.appendChild(ul);
-      }
-      box.appendChild(card);
-    });
-
-    var best = groups[yours] && groups[yours][0];
-    if (best) {
-      $("main").href = best.a.browser_download_url;
-      $("main-label").textContent = "Download for " + names[yours];
-    } else {
-      $("main-label").textContent = yours === "mobile" ? "Worldscape is for computers" : "Choose your download";
-    }
-    $("meta").innerHTML = "";
-    var v = el("b", null, "Version " + version);
-    $("meta").appendChild(v);
-    $("meta").appendChild(document.createTextNode((date ? ", released " + date : "") + ". Free to use." + (yours === "mobile" ? " Open this page on your computer to install it." : "")));
-    $("foot-version").textContent = "Version " + version;
-    $("foot-notes").href = rel.html_url || releasesPage;
-  }
-
-  // GitHub allows 60 anonymous requests an hour per visitor, so remember the answer for 10 minutes.
-  var KEY = "ws-release:" + REPO;
-  try {
-    var c = JSON.parse(sessionStorage.getItem(KEY) || "null");
-    if (c && Date.now() - c.t < 600000) { render(c.r); return; }
-  } catch (e) {}
-
-  fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (rel) {
-      try { sessionStorage.setItem(KEY, JSON.stringify({ t: Date.now(), r: { tag_name: rel.tag_name, published_at: rel.published_at, html_url: rel.html_url, assets: (rel.assets || []).map(function (a) { return { name: a.name, size: a.size, browser_download_url: a.browser_download_url }; }) } })); } catch (e) {}
-      render(rel);
-    })
-    .catch(fail);
-})();
-</script>
-<script>
-(function(){
-  var toc=document.querySelectorAll(".qs-toc a"),chaps=document.querySelectorAll(".qs-chap");
-  if("IntersectionObserver" in window){
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;
-      toc.forEach(function(a){var on=a.getAttribute("href")==="#"+e.target.id;a.classList.toggle("on",on);
-        if(on&&getComputedStyle(a.parentNode.parentNode).display==="flex")a.parentNode.parentNode.scrollTo({left:a.offsetLeft-20,behavior:"smooth"});});});},{rootMargin:"-30% 0px -60% 0px"});
-    chaps.forEach(function(c){io.observe(c);});
-  }
-  document.querySelectorAll(".car").forEach(function(car){
-    var track=car.querySelector(".car-track"),slides=track.children,n=slides.length,dots=car.querySelector(".car-dots"),
-        count=car.querySelector(".car-count"),prev=car.querySelector('[data-d="-1"]'),next=car.querySelector('[data-d="1"]'),cur=0;
-    for(var i=0;i<n;i++){(function(i){var b=document.createElement("button");b.type="button";b.setAttribute("aria-label","Go to screenshot "+(i+1));
-      b.addEventListener("click",function(){go(i);});dots.appendChild(b);})(i);}
-    function go(i){i=Math.max(0,Math.min(n-1,i));track.scrollTo({left:slides[i].offsetLeft-track.offsetLeft-2,behavior:"smooth"});}
-    function sync(){var w=slides[0].offsetWidth+16;cur=Math.max(0,Math.min(n-1,Math.round(track.scrollLeft/w)));
-      Array.prototype.forEach.call(dots.children,function(d,i){if(i===cur)d.setAttribute("aria-current","true");else d.removeAttribute("aria-current");});
-      count.textContent=(cur+1)+" / "+n;prev.disabled=cur===0;next.disabled=cur===n-1;}
-    prev.addEventListener("click",function(){go(cur-1);});next.addEventListener("click",function(){go(cur+1);});
-    track.addEventListener("scroll",function(){window.requestAnimationFrame(sync);},{passive:true});
-    car.addEventListener("keydown",function(e){if(e.key==="ArrowLeft"){e.preventDefault();go(cur-1);}else if(e.key==="ArrowRight"){e.preventDefault();go(cur+1);}});
-    window.addEventListener("resize",sync);sync();
-  });
-})();
-</script>
+<script src="assets/site.js"></script>
 </body>
 </html>
