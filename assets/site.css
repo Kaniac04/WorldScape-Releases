@@ -577,3 +577,11 @@ main{background:var(--leaf-rules),var(--foxing),var(--mottle),var(--paper),var(-
 
 /* Screenshots are shown exactly as they are: no tint, filter or blending, and no border */
 .frame img,:root:not([data-theme="light"]) .frame img,:root[data-theme="dark"] .frame img{filter:none;mix-blend-mode:normal;border:0;outline:0;box-shadow:none}
+
+/* Quickstart bullets: keep each item as normal flowing text so inline code, links and bold
+   stay in the line instead of becoming separate stretched flex columns */
+.qs-list li{display:block;position:relative;padding-left:26px}
+.qs-list li::before{position:absolute;left:0;top:0;line-height:1.7}
+.qs-chap code,.qs-chap kbd{display:inline;white-space:normal;word-break:normal;padding:.08em .4em;line-height:inherit;vertical-align:baseline}
+.qs-chap pre code{white-space:pre}
+.qs-chap code{-webkit-box-decoration-break:clone;box-decoration-break:clone;overflow-wrap:anywhere}
